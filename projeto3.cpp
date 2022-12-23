@@ -118,12 +118,10 @@ int main(int argc, char* argv[]) {
         MPI_Recv(geracao[BLOCK_SIZE + 1], N, MPI_INT, PROX_PROC, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE); // recebe linha 1 do proximo e coloca em M+1
         MPI_Recv(geracao[0], N, MPI_INT, PROC_ANT, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE); // recebe linha M do anterior e coloca em 0
 
-        // calculate next generation
+        // calcula proxima geracao
         int i, j;
         for (i = 1; i <= BLOCK_SIZE; i++) {
             for (j = 0; j <= N; j++) {
-                // cant move code below, its considerably faster executing here
-                // than creating another function and calling it
                 int neighborhood = getNeighbors(geracao, BLOCK_SIZE, N, i, j);
 
                 int controle = geracao[i][j];
