@@ -58,7 +58,6 @@ int main(int argc, char* argv[]) {
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    // first and last rows are for messaging
     int** geracao = (int**)malloc((1 + BLOCK_SIZE + 1) * sizeof(int*));
     int** prox = (int**)malloc((1 + BLOCK_SIZE + 1) * sizeof(int*));
 
