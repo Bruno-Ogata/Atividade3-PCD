@@ -143,49 +143,49 @@ int main(int argc, char* argv[]) {
         prox = tmp;
 
         // contagem parcial do bloco
-        int localCount = Soma_serial(geracao, BLOCK_SIZE, N);
+        int localCont = Soma_serial(geracao, BLOCK_SIZE, N);
 
         // aguarda todos os processos
         MPI_Barrier(MPI_COMM_WORLD);
 
 
         if (PID == 0) {
-            int generationCount = localCount;
-            int externalCount;
+            int geracaoCont = localCont;
+            int externoCont;
 
             // soma contadores de outros processos
             int p;
             for (p = 1; p < NUM_PROCESSES; p++) {
-                MPI_Recv(&externalCount, 1, MPI_INT, p, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                generationCount += externalCount;
+                MPI_Recv(&externoCont, 1, MPI_INT, p, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+                geracaoCont += externoCont;
             }
 
-            printf("-/%04d           %d        %.02fms\n", k + 1, generationCount, (MPI_Wtime() - start) * 1000.0);
+            printf("-/%04d           %d        %.02fms\n", k + 1, geracaoCont, (MPI_Wtime() - start) * 1000.0);
         }
         else {
-            MPI_Isend(&localCount, 1, MPI_INT, 0, 10, MPI_COMM_WORLD, &REQ);
+            MPI_Isend(&localCont, 1, MPI_INT, 0, 10, MPI_COMM_WORLD, &REQ);
         }
     }
 
 
     // contagem parcial do bloco
-    int count = Soma_serial(geracao, BLOCK_SIZE, N);
+    int cont = Soma_serial(geracao, BLOCK_SIZE, N);
 
     if (PID == 0) {
-        int externalCount;
+        int externoCont;
 
         // soma contadore de outros processos
         int p;
         for (p = 1; p < NUM_PROCESSES; p++) {
-            MPI_Recv(&externalCount, 1, MPI_INT, p, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            count += externalCount;
+            MPI_Recv(&externoCont, 1, MPI_INT, p, 10, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            cont += externoCont;
         }
 
-        printf("\ncont (%04d)     %d        %.02fms\n", NUM_GENERATIONS, count, (MPI_Wtime() - start) * 1000.0);
+        printf("\ncont (%04d)     %d        %.02fms\n", NUM_GENERATIONS, cont, (MPI_Wtime() - start) * 1000.0);
 
     }
     else {
-        MPI_Isend(&count, 1, MPI_INT, 0, 10, MPI_COMM_WORLD, &REQ);
+        MPI_Isend(&cont, 1, MPI_INT, 0, 10, MPI_COMM_WORLD, &REQ);
     }
 
 
